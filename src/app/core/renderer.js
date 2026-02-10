@@ -15,6 +15,8 @@ export function createRenderer(canvas, sizes) {
 
     // Slightly nicer output
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    // renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    // renderer.toneMappingExposure = 1.0;
 
     return renderer;
 }

@@ -4,6 +4,7 @@ import { createCemeteryPlaceholder } from "./cemeteryPlaceholder";
 import { createMuseumPlaceholder } from "./museumPlaceholder";
 import { loadGLB } from "../../systems/loader";
 import { createGraveSlope } from "./graveSlope";
+import { createStairs } from "./stairs";
 
 export function createMemorialGroup() {
     const group = new THREE.Group();
@@ -28,13 +29,25 @@ export function createMemorialGroup() {
     /* -------------------------
         OTHER STATIC PARTS
     -------------------------- */
+    //stairs
+    const stairs = createStairs();
+
+    stairs.position.set(0, -0.65, 25);
+    stairs.rotation.y = Math.PI / 2;
+    stairs.scale.set(1, 1, 1); 
+
+    group.add(stairs);
+
+    //grave ground
     const graveSlope = createGraveSlope();
-    graveSlope.position.set(1, 5, 50); // tweak later
+    graveSlope.position.set(0, 3.27, 51.87);
     group.add(graveSlope);
 
+    //graves
     const cemetery = createCemeteryPlaceholder();
     cemetery.position.set(-10, 0, -6);
 
+    //museum
     const museum = createMuseumPlaceholder();
     museum.position.set(10, 0, -6);
 

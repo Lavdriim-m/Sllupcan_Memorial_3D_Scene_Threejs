@@ -10,6 +10,8 @@ export function setupLights(scene) {
     sun.position.set(20, 30, 10);
     sun.castShadow = true;
 
+    sun.shadow.bias = -0.0002;
+    sun.shadow.normalBias = 0.02;
     sun.shadow.mapSize.width = 2048;
     sun.shadow.mapSize.height = 2048;
     sun.shadow.camera.near = 1;
@@ -18,6 +20,7 @@ export function setupLights(scene) {
     sun.shadow.camera.right = 40;
     sun.shadow.camera.top = 40;
     sun.shadow.camera.bottom = -40;
+    sun.shadow.camera.updateProjectionMatrix();
 
     scene.add(sun);
 
