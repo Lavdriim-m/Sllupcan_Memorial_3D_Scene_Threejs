@@ -32,7 +32,7 @@ export function createGraveSlope() {
         roughnessMap,
         roughness: 1,
     });
-    material.color.set("#c0c0c0");
+    // material.color.set("#c0c0c0");
 
     const slope = new THREE.Mesh(geometry, material);
     slope.name = "GraveSlope";
