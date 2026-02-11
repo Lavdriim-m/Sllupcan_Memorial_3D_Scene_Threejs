@@ -99,13 +99,14 @@ function addClickableHitbox(anchor) {
     box.getCenter(center);
 
     // Pad it so clicks are forgiving
-    size.multiplyScalar(1.25);
-    size.y = Math.max(size.y, 1); // ensure some height
+    // size.multiplyScalar(1.25);
+    // size.y = Math.max(size.y, 1);
 
     const hitbox = new THREE.Mesh(
         new THREE.BoxGeometry(size.x, size.y, size.z),
         new THREE.MeshBasicMaterial({ visible: false })
     );
+    hitbox.scale.set(0.3, 0.7, 0.4);
     hitbox.name = "Hitbox";
     hitbox.position.copy(anchor.worldToLocal(center.clone()));
 

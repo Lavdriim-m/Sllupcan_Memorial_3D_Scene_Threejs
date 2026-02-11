@@ -54,20 +54,64 @@ export function createMemorialGroup() {
         id: "Top1",
         label: "Grave Top 1 (scan)",
         url: "/models/graves/grave_top1.glb",
-        position: [18, 5.5, 55],
+        position: [16.5, 4.5, 56],
         rotationY: THREE.MathUtils.degToRad(-20),
         rotationX: THREE.MathUtils.degToRad(0),
-        scale: 1,
+        scale: 1.1,
     });
 
     const graveTop2 = createGraveCluster({
         id: "Top2",
         label: "Grave Top 2 (scan)",
         url: "/models/graves/grave_top2.glb",
-        position: [1, 3.2, 56],
+        position: [10.5, 2.6, 56],
         rotationY: Math.PI + THREE.MathUtils.degToRad(-20),
         rotationX: THREE.MathUtils.degToRad(1.5),
-        rotationZ: THREE.MathUtils.degToRad(1.5),
+        rotationZ: THREE.MathUtils.degToRad(0),
+        scale: 1.4,
+    });
+
+    const graveTop3 = createGraveCluster({
+        id: "Top3",
+        label: "Grave Top 3 (scan)",
+        url: "/models/graves/grave_top2.glb",
+        position: [4, 2.6, 56],
+        rotationY: Math.PI + THREE.MathUtils.degToRad(-20),
+        rotationX: THREE.MathUtils.degToRad(1.5),
+        rotationZ: THREE.MathUtils.degToRad(0),
+        scale: 1.4,
+    });
+
+    const graveTop4 = createGraveCluster({
+        id: "Top4",
+        label: "Grave Top 4 (scan)",
+        url: "/models/graves/grave_top2.glb",
+        position: [-2.5, 2.6, 56],
+        rotationY: Math.PI + THREE.MathUtils.degToRad(-20),
+        rotationX: THREE.MathUtils.degToRad(1.5),
+        rotationZ: THREE.MathUtils.degToRad(0),
+        scale: 1.4,
+    });
+
+    const graveTop5 = createGraveCluster({
+        id: "Top5",
+        label: "Grave Top 5 (scan)",
+        url: "/models/graves/grave_top2.glb",
+        position: [-9, 2.6, 56],
+        rotationY: Math.PI + THREE.MathUtils.degToRad(-20),
+        rotationX: THREE.MathUtils.degToRad(1.5),
+        rotationZ: THREE.MathUtils.degToRad(0),
+        scale: 1.4,
+    });
+
+    const graveTop6 = createGraveCluster({
+        id: "Top6",
+        label: "Grave Top 6 (scan)",
+        url: "/models/graves/grave_top2.glb",
+        position: [-15.5, 2.6, 56],
+        rotationY: Math.PI + THREE.MathUtils.degToRad(-20),
+        rotationX: THREE.MathUtils.degToRad(1.5),
+        rotationZ: THREE.MathUtils.degToRad(0),
         scale: 1.4,
     });
     
@@ -127,7 +171,7 @@ export function createMemorialGroup() {
         scale: 1.2,
     });
 
-    group.add(graveTop1, graveTop2, graveBottom1, graveBottom2, graveBottom3, graveBottom4, graveBottom5);
+    group.add(graveTop1, graveTop2, graveTop3, graveTop4, graveTop5, graveTop6, graveBottom1, graveBottom2, graveBottom3, graveBottom4, graveBottom5);
 
     const cemetery = createCemeteryPlaceholder();
     cemetery.position.set(-10, 0, -6);

@@ -11,6 +11,7 @@ import { createMemorialGroup } from "./world/memorial/memorialGroup";
 
 import { createUI } from "./systems/ui";
 import { createInteraction } from "./systems/interaction";
+import { createCameraFocusController } from "./core/cameraFocus";
 
 export class App {
     constructor(containerEl) {
@@ -34,15 +35,29 @@ export class App {
         this.memorial = createMemorialGroup();
         this.scene.add(this.memorial.group);
 
-        // UI + Interaction
+        // UI + Interaction + Camera Focus
         this.ui = createUI(this.containerEl);
         this.interaction = createInteraction({
             camera: this.camera,
             scene: this.scene,
             rendererDomElement: this.renderer.domElement,
-            onPick: (hit) => this.ui.show(hit.object.userData?.info || "Object"),
+            onPick: (entity, meta) => {
+                this.ui.show(entity.userData?.info || entity.name || "Object");
+
+                if(meta?.focus){
+                    this.cameraFocus.focusOn(entity, {
+                    distanceMultiplier: entity.userData.type === "plaque" ? 2.2 : 1.5,
+                    duration: 0.9,
+                    });
+                }
+            },
             onClear: () => this.ui.hide(),
+            onControlStart: () => this.cameraFocus?.cancel?.(),
         });
+        this.cameraFocus = createCameraFocusController(
+            this.camera,
+            this.interaction.controls
+        );
 
         // Resize handling
         window.addEventListener("resize", () => {
@@ -62,6 +77,7 @@ export class App {
         const dt = this.clock.getDelta();
         // update interaction (controls)
         this.interaction.update(dt);
+        this.cameraFocus.update(dt);
 
         // small ambient animation placeholder (we’ll replace with real animations)
         this.memorial.update(dt);
