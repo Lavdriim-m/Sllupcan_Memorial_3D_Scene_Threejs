@@ -5,6 +5,7 @@ import { createMuseumPlaceholder } from "./museumPlaceholder";
 import { loadGLB } from "../../systems/loader";
 import { createGraveSlope } from "./graveSlope";
 import { createStairs } from "./stairs";
+import { createGraveCluster } from "./graves/graveCluster";
 
 export function createMemorialGroup() {
     const group = new THREE.Group();
@@ -44,6 +45,18 @@ export function createMemorialGroup() {
     group.add(graveSlope);
 
     //graves
+    const graveTop1 = createGraveCluster({
+        id: "Top1",
+        label: "Grave Top 1 (scan)",
+        url: "/models/graves/grave_top1.glb",
+        position: [0, 5.5, 70],
+        rotationY: THREE.MathUtils.degToRad(-20),
+        rotationX: THREE.MathUtils.degToRad(0),
+        scale: 1,
+    });
+
+    group.add(graveTop1);
+
     const cemetery = createCemeteryPlaceholder();
     cemetery.position.set(-10, 0, -6);
 
