@@ -32,8 +32,10 @@ export class App {
         setupLights(this.scene, this.renderer);
 
         // Memorial placeholders (we’ll replace with scans/models later)
-        this.memorial = createMemorialGroup();
-        this.scene.add(this.memorial.group);
+        createMemorialGroup().then((memorial) => {
+            this.memorial = memorial;
+            this.scene.add(this.memorial.group);
+        });
 
         // UI + Interaction + Camera Focus
         this.ui = createUI(this.containerEl);
@@ -80,7 +82,7 @@ export class App {
         this.cameraFocus.update(dt);
 
         // small ambient animation placeholder (we’ll replace with real animations)
-        this.memorial.update(dt);
+        if (this.memorial) this.memorial.update(dt);
 
         this.renderer.render(this.scene, this.camera);
     }

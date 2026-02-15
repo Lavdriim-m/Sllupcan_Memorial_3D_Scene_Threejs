@@ -20,7 +20,7 @@ export function createGraveSlope() {
 
     // Plane with enough segments to tilt smoothly
     const geometry = new THREE.PlaneGeometry(
-        46,
+        56,
         50,
         10,  // width segments
         6    // depth segments

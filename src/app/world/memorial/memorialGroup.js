@@ -6,8 +6,9 @@ import { loadGLB } from "../../systems/loader";
 import { createGraveSlope } from "./graveSlope";
 import { createStairs } from "./stairs";
 import { createGraveCluster } from "./graves/graveCluster";
+import { createFence } from "./fenceModel";
 
-export function createMemorialGroup() {
+export async function createMemorialGroup() {
     const group = new THREE.Group();
     group.name = "MemorialGroup";
 
@@ -176,7 +177,30 @@ export function createMemorialGroup() {
     const cemetery = createCemeteryPlaceholder();
     cemetery.position.set(-10, 0, -6);
 
-    //
+    //FENCE
+    try {
+        const fence = await createFence({
+        // If your fenceModel.js expects the model url:
+        url: "/models/fence.glb",
+
+        // Boundary points (edit these as needed)
+        points: [
+            new THREE.Vector3(-18, 5, 80),
+            new THREE.Vector3(18, 5, 80),
+            new THREE.Vector3(18, 3, 35),
+            new THREE.Vector3(-18, 3, 35),
+        ],
+        groundMeshes: [graveSlope],  // add platform mesh too if you have it
+        heightOffset: 0.5,
+        overlap: 1,
+        ySampleEvery: 1,
+        });
+
+        group.add(fence);
+        console.log("✅ Fence added");
+    } catch (err) {
+        console.error("❌ Fence failed to load/create", err);
+    }
 
     //museum
     const museum = createMuseumPlaceholder();
