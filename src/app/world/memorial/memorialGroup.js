@@ -174,42 +174,9 @@ export async function createMemorialGroup() {
 
     group.add(graveTop1, graveTop2, graveTop3, graveTop4, graveTop5, graveTop6, graveBottom1, graveBottom2, graveBottom3, graveBottom4, graveBottom5);
 
-    const cemetery = createCemeteryPlaceholder();
-    cemetery.position.set(-10, 0, -6);
 
     //FENCE
     try {
-        // const fence = await createFence({
-        //     postUrl: "/models/fence_post.glb",
-        //     panelUrl: "/models/fence_panel.glb",
-        //     points: [
-        //         new THREE.Vector3(-12, 5, 80),
-        //         new THREE.Vector3(12, 5, 80),
-        //         new THREE.Vector3(12, 3, 35),
-        //         new THREE.Vector3(-12, 3, 35),
-        //     ],
-        //     groundMeshes: [graveSlope],   // add more ground meshes if you have them
-        //     heightOffset: 0.03,
-        //     panelAxis: "x",
-        //     postRadius: 0.35,   // TUNE THIS
-        //     panelExtraGap: 0.02,               // change to "z" if your panel faces +Z
-        // });
-
-        // group.add(fence);
-
-        // const fenceTop = await createFenceLine({
-        //     postUrl: "/models/fence_post.glb",
-        //     panelUrl: "/models/fence_panel.glb",
-        //     start: new THREE.Vector3(-12, 5, 80),
-        //     end: new THREE.Vector3(12, 5, 80),
-        //     groundMeshes: [graveSlope],
-        //     heightOffset: 0.03,
-        //     panelAxis: "x",
-
-        //     postSideOffset: -1.45,   // TRY: 0.35 then -0.35 then 0.2 then -0.2
-        //     panelSideOffset: 0.0,
-        // });
-        // group.add(fenceTop);
 
         // TOP FENCE
         const fenceTop = await createRepeatedFenceLine({
@@ -280,11 +247,41 @@ export async function createMemorialGroup() {
         console.error("❌ Fence failed to load/create", err);
     }
 
-    //museum
-    const museum = createMuseumPlaceholder();
-    museum.position.set(10, 0, -6);
+    // MUSEUM (anchor + placeholder)
+    const museumAnchor = new THREE.Group();
+    museumAnchor.name = "MuseumAnchor";
 
-    group.add(cemetery, museum);
+    museumAnchor.position.set(15, -0.5, -4);
+    museumAnchor.rotation.y = THREE.MathUtils.degToRad(50);
+    museumAnchor.scale.set(1, 1, 1);
+
+    // Placeholder inside anchor (temporary)
+    const museumPlaceholder = createMuseumPlaceholder();
+    museumAnchor.add(museumPlaceholder);
+
+    group.add(museumAnchor);
+
+    loadGLB("/models/museum.glb")
+    .then((gltf) => {
+        const model = gltf.scene;
+        model.name = "MuseumModel";
+
+        model.traverse((obj) => {
+        if (obj.isMesh) {
+            obj.castShadow = true;
+            obj.receiveShadow = true;
+        }
+        });
+
+        // swap placeholder -> real model
+        museumAnchor.clear();
+        museumAnchor.add(model);
+
+        console.log("✅ Museum loaded into museumAnchor");
+    })
+    .catch((err) => {
+        console.error("❌ Failed to load museum.glb", err);
+    });
 
     /* -------------------------
         LOAD REAL MONUMENT
