@@ -6,7 +6,7 @@ import { loadGLB } from "../../systems/loader";
 import { createGraveSlope } from "./graveSlope";
 import { createStairs } from "./stairs";
 import { createGraveCluster } from "./graves/graveCluster";
-import { createFence } from "./fenceModel";
+import { createRepeatedFenceLine } from "./fenceRepeat";
 
 export async function createMemorialGroup() {
     const group = new THREE.Group();
@@ -15,7 +15,7 @@ export async function createMemorialGroup() {
     // MONUMENTI
     const monumentAnchor = new THREE.Group();
     monumentAnchor.name = "MonumentAnchor";
-    monumentAnchor.position.set(0, 4.6, 0);
+    monumentAnchor.position.set(0, 4.6, 5);
     monumentAnchor.scale.set(10, 10, 10);
 
     // Placeholder goes INSIDE anchor
@@ -179,24 +179,102 @@ export async function createMemorialGroup() {
 
     //FENCE
     try {
-        const fence = await createFence({
-        // If your fenceModel.js expects the model url:
-        url: "/models/fence.glb",
+        // const fence = await createFence({
+        //     postUrl: "/models/fence_post.glb",
+        //     panelUrl: "/models/fence_panel.glb",
+        //     points: [
+        //         new THREE.Vector3(-12, 5, 80),
+        //         new THREE.Vector3(12, 5, 80),
+        //         new THREE.Vector3(12, 3, 35),
+        //         new THREE.Vector3(-12, 3, 35),
+        //     ],
+        //     groundMeshes: [graveSlope],   // add more ground meshes if you have them
+        //     heightOffset: 0.03,
+        //     panelAxis: "x",
+        //     postRadius: 0.35,   // TUNE THIS
+        //     panelExtraGap: 0.02,               // change to "z" if your panel faces +Z
+        // });
 
-        // Boundary points (edit these as needed)
-        points: [
-            new THREE.Vector3(-18, 5, 80),
-            new THREE.Vector3(18, 5, 80),
-            new THREE.Vector3(18, 3, 35),
-            new THREE.Vector3(-18, 3, 35),
-        ],
-        groundMeshes: [graveSlope],  // add platform mesh too if you have it
-        heightOffset: 0.5,
-        overlap: 1,
-        ySampleEvery: 1,
+        // group.add(fence);
+
+        // const fenceTop = await createFenceLine({
+        //     postUrl: "/models/fence_post.glb",
+        //     panelUrl: "/models/fence_panel.glb",
+        //     start: new THREE.Vector3(-12, 5, 80),
+        //     end: new THREE.Vector3(12, 5, 80),
+        //     groundMeshes: [graveSlope],
+        //     heightOffset: 0.03,
+        //     panelAxis: "x",
+
+        //     postSideOffset: -1.45,   // TRY: 0.35 then -0.35 then 0.2 then -0.2
+        //     panelSideOffset: 0.0,
+        // });
+        // group.add(fenceTop);
+
+        // TOP FENCE
+        const fenceTop = await createRepeatedFenceLine({
+            url: "/models/fence_segment.glb", 
+            start: new THREE.Vector3(-30, 4.7, 70),
+            end: new THREE.Vector3(14, 4.7, 70),
+            groundMeshes: [graveSlope],
+            heightOffset: 0.03,
+            // lengthAxis: "x", // set if you know it
+            overlap: 0.1,
         });
 
-        group.add(fence);
+        const fenceNorth = await createRepeatedFenceLine({
+            url: "/models/fence_segment.glb", 
+            start: new THREE.Vector3(-24.442, 4.5, 57),
+            end: new THREE.Vector3(-24.25, 1.9, 19.5),
+            groundMeshes: [graveSlope],
+            heightOffset: 0.03,
+            // lengthAxis: "x", // set if you know it
+            overlap: 0.1,
+        });
+
+        const fenceSouth = await createRepeatedFenceLine({
+            url: "/models/fence_segment.glb", 
+            start: new THREE.Vector3(21.1, 4.5, 57),
+            end: new THREE.Vector3(21.1, 1.9, 19.5),
+            groundMeshes: [graveSlope],
+            heightOffset: 0.03,
+            // lengthAxis: "x", // set if you know it
+            overlap: 0.1,
+        });
+
+        //BOTTOM FENCE
+        const fenceBottom = await createRepeatedFenceLine({
+            url: "/models/fence_segment.glb", 
+            start: new THREE.Vector3(-30, 0.3, -10),
+            end: new THREE.Vector3(14, 0.3, -10),
+            groundMeshes: [graveSlope],
+            heightOffset: 0.03,
+            // lengthAxis: "x", // set if you know it
+            overlap: 0.1,
+        });
+
+        const fenceBottomNorth = await createRepeatedFenceLine({
+            url: "/models/fence_segment.glb", 
+            start: new THREE.Vector3(-21.52, 0.3, 0),
+            end: new THREE.Vector3(-21.3, 0.3, 32.8),
+            groundMeshes: [graveSlope],
+            heightOffset: 0.03,
+            // lengthAxis: "x", // set if you know it
+            overlap: 0.1,
+        });
+
+        const fenceBottomSouth = await createRepeatedFenceLine({
+            url: "/models/fence_segment.glb", 
+            start: new THREE.Vector3(24, 0.3, 0),
+            end: new THREE.Vector3(24, 0.3, 32.8),
+            groundMeshes: [graveSlope],
+            heightOffset: 0.03,
+            // lengthAxis: "x", // set if you know it
+            overlap: 0.1,
+        });
+
+        group.add(fenceTop, fenceNorth, fenceSouth, fenceBottom, fenceBottomNorth, fenceBottomSouth);
+        
         console.log("✅ Fence added");
     } catch (err) {
         console.error("❌ Fence failed to load/create", err);

@@ -11,15 +11,15 @@ export function createCemeteryPlaceholder() {
     });
 
     // simple repeated tombstones
-    for (let i = 0; i < 12; i++) {
-        const geo = new THREE.BoxGeometry(0.6, 1.0, 0.2);
-        const tomb = new THREE.Mesh(geo, stoneMat);
-        tomb.position.set((i % 4) * 1.2, 0.5, Math.floor(i / 4) * 1.4);
-        tomb.castShadow = true;
-        tomb.receiveShadow = true;
-        tomb.userData.info = `Tombstone ${i + 1} (placeholder)`;
-        group.add(tomb);
-    }
+    // for (let i = 0; i < 12; i++) {
+    //     const geo = new THREE.BoxGeometry(0.6, 1.0, 0.2);
+    //     const tomb = new THREE.Mesh(geo, stoneMat);
+    //     tomb.position.set((i % 4) * 1.2, 0.5, Math.floor(i / 4) * 1.4);
+    //     tomb.castShadow = true;
+    //     tomb.receiveShadow = true;
+    //     tomb.userData.info = `Tombstone ${i + 1} (placeholder)`;
+    //     group.add(tomb);
+    // }
 
     return group;
 }
