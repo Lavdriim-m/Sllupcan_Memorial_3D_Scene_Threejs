@@ -8,5 +8,6 @@ export function createCamera(sizes) {
         300
     );
     camera.position.set(10, 8, 12);
+    
     return camera;
 }

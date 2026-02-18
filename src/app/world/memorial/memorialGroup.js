@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { createMonumentPlaceholder } from "./monumentPlaceholder";
-import { createCemeteryPlaceholder } from "./cemeteryPlaceholder";
 import { createMuseumPlaceholder } from "./museumPlaceholder";
 import { loadGLB } from "../../systems/loader";
 import { createGraveSlope } from "./graveSlope";
@@ -28,7 +27,7 @@ export async function createMemorialGroup() {
         id: "Plaque1",
         label: "Plaque (scan)",
         url: "/models/plaque.glb",
-        position: [0, 1.92, 37],
+        position: [0.5, 1.92, 37],
         rotationY: THREE.MathUtils.degToRad(220),
         rotationX: 0,
         scale: 1,
@@ -251,7 +250,7 @@ export async function createMemorialGroup() {
     const museumAnchor = new THREE.Group();
     museumAnchor.name = "MuseumAnchor";
 
-    museumAnchor.position.set(15, -0.5, -4);
+    museumAnchor.position.set(15, -0.35, -4);
     museumAnchor.rotation.y = THREE.MathUtils.degToRad(50);
     museumAnchor.scale.set(1, 1, 1);
 
@@ -307,6 +306,91 @@ export async function createMemorialGroup() {
         .catch((err) => {
         console.error("❌ Failed to load lapidari.glb", err);
         });
+    
+    // CAR RELIC
+
+    loadGLB("/models/carRelic.glb")
+        .then((gltf) => {
+            const car_Relic = gltf.scene;
+            car_Relic.name = "Car Relic";
+
+            car_Relic.traverse((obj) => {
+                if (obj.isMesh) {
+                    obj.castShadow = true;
+                    obj.receiveShadow = true;
+                }
+            });
+        
+        car_Relic.position.set(20, -0.15, 8);
+        car_Relic.rotation.x = THREE.MathUtils.degToRad(1);
+        car_Relic.scale.set(1, 1, 1);
+
+        car_Relic.userData.type = "car";
+        car_Relic.userData.info = "Car Relic";
+
+        group.add(car_Relic);
+        console.log("✅ Extra model loaded");
+    })
+    .catch((err) => {
+        console.log("❌ Failed to load extra model", err);
+    });
+
+    // LIGHT POLES
+    loadGLB("/models/light_pole.glb")
+        .then((gltf) => {
+            const template = gltf.scene;
+            template.name = "LightPoleTemplate";
+
+            template.traverse((obj) => {
+                if (obj.isMesh) {
+                    obj.castShadow = true;
+                    obj.receiveShadow = true;
+                }
+            });
+        
+        // Set positions
+        const poles = [
+            { pos: [-2.2, 1.6, 27.55], rotY: 0, scale: 0.35 },
+            { pos: [2.7, 1.6, 27.55], rotY: 0, scale: 0.35 },
+            { pos: [2.7, 2, 34], rotY: 0, scale: 0.35 },
+            { pos: [-2.2, 2, 34], rotY: 0, scale: 0.35 },
+            { pos: [2.8, 2.5, 41], rotY: 0, scale: 0.35 },
+            { pos: [9.2, 2.5, 41], rotY: 0, scale: 0.35 },
+            { pos: [15.7, 2.5, 41], rotY: 0, scale: 0.35 },
+            { pos: [-3.7, 2.5, 41], rotY: 0, scale: 0.35 },
+            { pos: [-10.2, 2.5, 41], rotY: 0, scale: 0.35 },
+            { pos: [-10.8, 3.88, 60.7], rotY: 0, scale: 0.35 },
+            { pos: [-17.3, 3.88, 60.7], rotY: 0, scale: 0.35 },
+            { pos: [-4.3, 3.88, 60.7], rotY: 0, scale: 0.35 },
+            { pos: [2.3, 3.88, 60.7], rotY: 0, scale: 0.35 },
+            { pos: [8.8, 3.88, 60.7], rotY: 0, scale: 0.35 },
+            { pos: [15.5, 3.88, 58.8], rotY: 0, scale: 0.35 },
+        ];
+
+        const polesGroup = new THREE.Group();
+        polesGroup.name = "LightPoles";
+
+        for (let i = 0; i < poles.length; i++) {
+            const p = poles[i];
+
+            const pole = template.clone(true);
+            pole.name = `LightPole_${i + 1}`;
+
+            pole.position.set(p.pos[0], p.pos[1], p.pos[2]);
+            pole.rotation.y = p.rotY ?? 0;
+            pole.scale.setScalar(p.scale ?? 1);
+
+            polesGroup.add(pole);
+        }
+
+        group.add(polesGroup);
+        console.log("✅ Light poles added");
+    })
+    .catch((err) => {
+        console.error("❌ Failed to load light_pole.glb", err);
+    });
+    
+    
 
     /* -------------------------
         UPDATE LOOP
