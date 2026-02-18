@@ -272,6 +272,9 @@ export async function createMemorialGroup() {
         }
         });
 
+        model.userData.type = "Museum";
+        model.userData.info = "Museum Building";
+
         // swap placeholder -> real model
         museumAnchor.clear();
         museumAnchor.add(model);
@@ -296,6 +299,9 @@ export async function createMemorialGroup() {
             obj.receiveShadow = true;
             }
         });
+
+        model.userData.type = "lapidari";
+        model.userData.info = "Lapidari Monument";
 
         // Remove placeholder, add real model
         monumentAnchor.clear();
