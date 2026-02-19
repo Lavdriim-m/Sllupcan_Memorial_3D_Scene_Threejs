@@ -6,10 +6,13 @@ import { createGraveSlope } from "./graveSlope";
 import { createStairs } from "./stairs";
 import { createGraveCluster } from "./graves/graveCluster";
 import { createRepeatedFenceLine } from "./fenceRepeat";
+import { SkeletonUtils } from "three/examples/jsm/Addons.js";
 
 export async function createMemorialGroup() {
     const group = new THREE.Group();
     group.name = "MemorialGroup";
+
+    const mixers = [];
 
     // MONUMENTI
     const monumentAnchor = new THREE.Group();
@@ -370,7 +373,9 @@ export async function createMemorialGroup() {
             { pos: [-4.3, 3.88, 60.7], rotY: 0, scale: 0.35 },
             { pos: [2.3, 3.88, 60.7], rotY: 0, scale: 0.35 },
             { pos: [8.8, 3.88, 60.7], rotY: 0, scale: 0.35 },
-            { pos: [15.5, 3.88, 58.8], rotY: 0, scale: 0.35 },
+            { pos: [15.5, 3.5, 58.8], rotY: 0, scale: 0.35 },
+            { pos: [-17.45, 1.6, 27.55], rotY: 0, scale: 0.35 },
+            { pos: [17.2, 1.6, 27.55], rotY: 0, scale: 0.35 },
         ];
 
         const polesGroup = new THREE.Group();
@@ -395,6 +400,140 @@ export async function createMemorialGroup() {
     .catch((err) => {
         console.error("❌ Failed to load light_pole.glb", err);
     });
+
+    //TREES
+    loadGLB("/models/trees/tree1.glb")
+    .then((gltf) => {
+        const template = gltf.scene;
+        template.name = "TreeTemplate";
+
+        // 🔥 Performance: disable shadows for trees (big win)
+        template.traverse((obj) => {
+        if (obj.isMesh) {
+            obj.castShadow = false;
+            obj.receiveShadow = false;
+
+            // 🔥 Performance: avoid expensive material features if present
+            if (obj.material) {
+            // keep it simple / consistent
+            obj.material.transparent = true;
+            obj.material.depthWrite = true;
+            }
+        }
+        });
+
+        // Your tree placements (same as before, no modelKey needed)
+        // const treeInstances = [
+        // { pos: [-15.7, 1, 25.4], rotY: 20, scale: 0.15 },
+        // { pos: [-12.7, 1, 25.2], rotY: 140, scale: 0.15 },
+        // { pos: [-9, 1, 25.2], rotY: 220, scale: 0.15 },
+        // { pos: [-4, 1, 25.2], rotY: 330, scale: 0.15 },
+        // ];
+
+        const treesGroup = new THREE.Group();
+        treesGroup.name = "Trees";
+
+        // Optional small variation (set to 0 to disable)
+        const randomYawDeg = 10;
+        const randomScale = 0.08;
+        const randomPos = 0.25;
+
+        for (let i = 0; i < treeInstances.length; i++) {
+        const t = treeInstances[i];
+
+        // NOTE: clone(true) is fine here, but trees are heavy → keep count low
+        const tree = template.clone(true);
+        tree.name = `Tree_${i + 1}`;
+
+        // Position (tiny jitter)
+        const x = t.pos[0] + (Math.random() * 2 - 1) * randomPos;
+        const y = t.pos[1];
+        const z = t.pos[2] + (Math.random() * 2 - 1) * randomPos;
+        tree.position.set(x, y, z);
+
+        // Rotation (yaw)
+        const yaw =
+            THREE.MathUtils.degToRad(t.rotY ?? 0) +
+            THREE.MathUtils.degToRad((Math.random() * 2 - 1) * randomYawDeg);
+        tree.rotation.y = yaw;
+
+        // Scale
+        const s = (t.scale ?? 1) * (1 + (Math.random() * 2 - 1) * randomScale);
+        tree.scale.setScalar(s);
+
+        // Optional: clickable label
+        tree.userData.type = "tree";
+        tree.userData.info = `Tree ${i + 1}`;
+
+        treesGroup.add(tree);
+        }
+
+        group.add(treesGroup);
+        console.log("✅ Trees added:", treeInstances.length);
+    })
+    .catch((err) => {
+        console.error("❌ Failed to load tree1.glb", err);
+    });
+
+    //ANIMATED FLAGS
+    loadGLB("/models/albanian_flag.glb")
+        .then((gltf) => {
+            const template = gltf.scene;
+            template.name = "FlagTemplate";
+
+            template.traverse((obj) => {
+                if (obj.isMesh) {
+                    obj.castShadow = true;
+                    obj.receiveShadow = false;
+                }
+            });
+
+            const clip = gltf.animations?.[0];
+            if (!clip) {
+                console.warn("⚠️ Flag GLB has no animations.");
+                group.add(template);
+                return;
+            }
+
+            const flags = [
+                { pos: new THREE.Vector3(-11.8, 1.15, 29), rotY: THREE.MathUtils.degToRad(0), scale: 0.1 },
+                { pos: new THREE.Vector3(-13, 1.15, 29), rotY: THREE.MathUtils.degToRad(0), scale: 0.1 },
+                { pos: new THREE.Vector3(-14.2, 1.15, 29), rotY: THREE.MathUtils.degToRad(0), scale: 0.1 },
+            ];
+
+            const flagsGroup = new THREE.Group();
+            flagsGroup.name = "Flags";
+
+            for (let i = 0; i < flags.length; i++) {
+                const f = flags[i];
+
+                const flag = SkeletonUtils.clone(template);
+                flag.name = `Flag_${i + 1}`;
+
+                flag.position.copy(f.pos);
+                flag.rotation.y = f.rotY;
+                flag.scale.setScalar(f.scale);
+
+                flagsGroup.add(flag);
+
+                const mixer = new THREE.AnimationMixer(flag);
+                const action = mixer.clipAction(clip);
+                action.setLoop(THREE.LoopRepeat, Infinity);
+                action.play();
+                
+                const phase = (i / flags.length) * clip.duration;
+                action.time = phase;
+                mixer.update(0);
+
+                mixers.push(mixer);
+            }
+
+            group.add(flagsGroup);
+            console.log("✅ Flags added:", flags.length);
+        })
+        .catch((err) => {
+            console.error("❌ Failed to load animated flag", err);
+        });
     
     
 
@@ -404,7 +543,9 @@ export async function createMemorialGroup() {
     return {
         group,
         update(dt) {
-        
+            for (let i = 0; i < mixers.length; i++) {
+                mixers[i].update(dt);
+            }
         },
     };
 }
