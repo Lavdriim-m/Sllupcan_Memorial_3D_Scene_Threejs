@@ -18,7 +18,7 @@ export async function createMemorialGroup() {
     // MONUMENTI
     const monumentAnchor = new THREE.Group();
     monumentAnchor.name = "MonumentAnchor";
-    monumentAnchor.position.set(0, 4.6, 5);
+    monumentAnchor.position.set(0, 4.55, 5);
     monumentAnchor.scale.set(10, 10, 10);
 
     // Placeholder goes INSIDE anchor
