@@ -5,9 +5,210 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>sllupcan-memorial</title>
+
+    <!-- Grave info panel styles (desktop: right panel, mobile: bottom sheet) -->
+    <style>
+      .grave-panel {
+        position: fixed;
+        z-index: 999;
+
+        background: rgba(15, 15, 15, 0.9);
+        color: white;
+        backdrop-filter: blur(8px);
+
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+
+        padding: 14px;
+        box-sizing: border-box;
+
+        max-width: 360px;
+        width: calc(100% - 24px);
+
+        /* Desktop position (right panel) */
+        top: 12px;
+        right: 12px;
+        bottom: 12px;
+
+        transform: translateX(110%);
+        transition: transform 180ms ease;
+
+        overflow: hidden; /* important */
+      }
+
+      .grave-panel.is-open {
+        transform: translateX(0);
+      }
+
+      /* =========================
+        HEADER / CLOSE
+        ========================= */
+      .grave-panel__close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+
+        background: transparent;
+        color: white;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 6px 8px;
+      }
+
+      .grave-panel__header {
+        padding-right: 30px;
+      }
+
+      .grave-panel__muted {
+        opacity: 0.8;
+        margin: 6px 0;
+      }
+
+      /* =========================
+        BODY
+        ========================= */
+      .grave-panel__body {
+        margin-top: 12px;
+        line-height: 1.35;
+        overflow-y: auto;
+        max-height: calc(100% - 120px); /* space for header + button */
+      }
+
+      /* =========================
+        COLLAPSED STATE
+        ========================= */
+      .grave-panel.is-collapsed .grave-panel__body {
+        display: none;
+      }
+
+      /* Desktop collapsed height */
+      @media (min-width: 769px) {
+        .grave-panel.is-open.is-collapsed {
+          bottom: auto;
+          height: 180px; /* header + buttons only */
+        }
+      }
+
+      /* =========================
+        TOGGLE BUTTON
+        ========================= */
+      .grave-panel__toggle {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+
+        padding: 10px;
+        border-radius: 12px;
+        cursor: pointer;
+      }
+
+      /* =========================
+        PERSON CARDS
+        ========================= */
+      .person-card {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 14px;
+        padding: 12px;
+        margin-top: 10px;
+      }
+
+      .person-card__top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .person-card__name {
+        font-weight: 700;
+      }
+
+      .person-card__dates {
+        opacity: 0.8;
+        font-size: 0.92em;
+        margin-top: 4px;
+      }
+
+      .person-card__btn {
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        padding: 8px 10px;
+        border-radius: 12px;
+        cursor: pointer;
+      }
+
+      .person-card__bio {
+        opacity: 0.95;
+        margin-top: 10px;
+        line-height: 1.35;
+        display: none;
+      }
+
+      /* =========================
+        MOBILE (BOTTOM SHEET)
+        ========================= */
+      @media (max-width: 768px) {
+        .grave-panel {
+          left: 12px;
+          right: 12px;
+          top: auto;
+          bottom: 12px;
+
+          max-width: none;
+          max-height: 55vh;
+
+          transform: translateY(110%);
+        }
+
+        .grave-panel.is-open {
+          transform: translateY(0);
+        }
+
+        .grave-panel.is-open.is-collapsed {
+          max-height: 160px;
+        }
+      }
+    </style>
   </head>
+
   <body>
     <div id="app"></div>
+
+    <!-- Grave Info Panel (hidden by default) -->
+    <div id="grave-panel" class="grave-panel" aria-hidden="true">
+      <button
+        id="grave-panel-close"
+        class="grave-panel__close"
+        aria-label="Close"
+        type="button"
+      >
+        ✕
+      </button>
+
+      <div class="grave-panel__header">
+        <h2 id="grave-name">Grave</h2>
+        <p id="grave-dates" class="grave-panel__muted"></p>
+        <p id="grave-title" class="grave-panel__muted"></p>
+      </div>
+
+      <div class="grave-panel__body">
+        <!-- We will inject 2–4 (or more) people here dynamically -->
+        <div id="grave-people"></div>
+      </div>
+
+      <button id="grave-panel-toggle" class="grave-panel__toggle" type="button">
+        Collapse
+      </button>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

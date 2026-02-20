@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { openGravePanel } from "./gravePanel";
 
 export function createInteraction({
     camera,
@@ -90,10 +91,20 @@ export function createInteraction({
     // Double click behavior (focus)
     rendererDomElement.addEventListener("dblclick", (event) => {
         const entity = pickEntity(event);
+
         if (entity) {
-        onPick?.(entity, { focus: true });
+            // Existing behavior: focus camera
+            onPick?.(entity, { focus: true });
+
+            // NEW: open grave info panel if this is a grave set
+            if (
+                entity.userData?.type === "graveCluster" &&
+                entity.userData?.id
+            ) {
+                openGravePanel(entity.userData.id);
+            }
         } else {
-        onClear?.();
+            onClear?.();
         }
     });
 
