@@ -333,8 +333,8 @@ export async function createMemorialGroup() {
         console.error("❌ Failed to load lapidari.glb", err);
         });
     
+    
     // CAR RELIC
-
     loadGLB("/models/carRelic.glb")
         .then((gltf) => {
             const car_Relic = gltf.scene;
@@ -531,9 +531,7 @@ export async function createMemorialGroup() {
     
     
 
-    /* -------------------------
-        UPDATE LOOP
-    -------------------------- */
+    // UPDATE LOOP
     return {
         group,
         update(dt) {

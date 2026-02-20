@@ -81,7 +81,7 @@ export class App {
         this.interaction.update(dt);
         this.cameraFocus.update(dt);
 
-        // small ambient animation placeholder (we’ll replace with real animations)
+        // small ambient animation placeholder
         if (this.memorial) this.memorial.update(dt);
 
         this.renderer.render(this.scene, this.camera);

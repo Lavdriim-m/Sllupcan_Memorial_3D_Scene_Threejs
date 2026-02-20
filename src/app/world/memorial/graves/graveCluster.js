@@ -57,7 +57,6 @@ export function createGraveCluster({
             mats.forEach((m) => {
                 if (!m) return;
                 m.metalness = 0;
-                // keep roughness realistic, but don’t force if you already tuned it
                 // m.roughness = 1;
                 m.needsUpdate = true;
             });
@@ -83,7 +82,7 @@ export function createGraveCluster({
     return anchor;
 }
 
-/** Adds an invisible padded hitbox to the anchor to make clicking easy. */
+// Adds an invisible padded hitbox to the anchor to make clicking easy.
 function addClickableHitbox(anchor) {
     // Remove old hitbox if it exists
     const old = anchor.getObjectByName("Hitbox");

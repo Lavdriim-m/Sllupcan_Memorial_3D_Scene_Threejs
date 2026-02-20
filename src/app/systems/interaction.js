@@ -8,7 +8,7 @@ export function createInteraction({
     rendererDomElement,
     onPick,
     onClear,
-    onControlStart, // optional: call this to cancel camera animation when user drags
+    onControlStart, // call this to cancel camera animation when user drags
     }) {
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -22,7 +22,7 @@ export function createInteraction({
 
     // --- Drag detection to avoid "click" firing after orbit drag ---
     let pointerDown = null;
-    const DRAG_PX = 6; // increase if you still get accidental clicks
+    const DRAG_PX = 6; // increase if accidental clicks
 
     function resolvePickedEntity(hitObject) {
         // If hitbox points to a target, use it

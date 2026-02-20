@@ -17,7 +17,7 @@ export function createRenderer(canvas, sizes) {
     const dprCap = isMobile ? 1.25 : 2;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, dprCap));
 
-    // Shadows (requirement)
+    // Shadows
     renderer.shadowMap.enabled = !isMobile;
     if (!isMobile) {
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;

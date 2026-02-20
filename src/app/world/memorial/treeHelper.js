@@ -29,8 +29,6 @@ export function addInstancedGLTF(templateScene, placements) {
     const material = m.material;
 
     // IMPORTANT: don't blindly kill transparency for leaves.
-    // If you want a performance tweak, do it carefully later.
-    // For now keep original materials as-is.
     const inst = new THREE.InstancedMesh(m.geometry, material, count);
     inst.castShadow = false;
     inst.receiveShadow = false;

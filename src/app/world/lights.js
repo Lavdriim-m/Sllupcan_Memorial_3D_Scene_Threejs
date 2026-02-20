@@ -25,7 +25,7 @@ export function setupLights(scene) {
     scene.add(sun);
 
     // Accent light (for monument area later)
-    const accent = new THREE.PointLight(0xfff2cc, 0.6, 35);
-    accent.position.set(0, 6, 0);
+    const accent = new THREE.PointLight(0xfff2cc, 5, 35);
+    accent.position.set(0, 22, 10);
     scene.add(accent);
 }

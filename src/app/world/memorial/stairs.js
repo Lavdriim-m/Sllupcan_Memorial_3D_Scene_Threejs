@@ -6,12 +6,12 @@ export function createStairs() {
     const stairsAnchor = new THREE.Group();
     stairsAnchor.name = "StairsAnchor";
 
-    // Control stairs transform here (always)
+    // Control stairs transform here
     stairsAnchor.position.set(0, 0, 0);
     stairsAnchor.rotation.set(0, 0, 0);
     stairsAnchor.scale.set(1, 1, 1);
 
-    // Temporary placeholder (optional)
+    // Temporary placeholder
     const placeholder = new THREE.Mesh(
         new THREE.BoxGeometry(6, 0.5, 2),
         new THREE.MeshStandardMaterial({ color: "#777", roughness: 1 })

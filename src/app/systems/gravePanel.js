@@ -10,13 +10,11 @@ const datesEl = document.getElementById("grave-dates");
 const titleEl = document.getElementById("grave-title");
 const peopleEl = document.getElementById("grave-people");
 
-/**
- * Opens the grave panel for a grave SET (Top1, Bottom3, etc.)
- */
+// Opens the grave panel for a grave SET (Top1, Bottom3, etc.)
 export function openGravePanel(graveSetId) {
   const data = GRAVE_SETS[graveSetId];
 
-  // Safe fallback (important so nothing crashes)
+  // Safe fallback
   const safe = data ?? {
     label: graveSetId,
     people: [],
@@ -83,9 +81,7 @@ export function openGravePanel(graveSetId) {
   toggleBtn.textContent = "Expand";
 }
 
-/**
- * Closes the grave panel
- */
+// Closes the grave panel
 export function closeGravePanel() {
   panel.classList.remove("is-open");
   panel.classList.remove("is-collapsed");

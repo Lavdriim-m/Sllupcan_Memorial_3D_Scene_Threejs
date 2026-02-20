@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { TextureLoader, RepeatWrapping } from "three";
 
 export function setupEnvironment(scene) {
-    // Ground plane (placeholder for terrain)
+    // Ground plane
     const loader = new TextureLoader();
 
     const baseColor = loader.load("/textures/grass/grass_basecolor5.jpg");
@@ -37,6 +37,6 @@ export function setupEnvironment(scene) {
     ground.userData.info = "Ground / Terrain";
     scene.add(ground);
 
-    // Light fog for atmosphere (optional but nice)
+    // Light fog for atmosphere
     scene.fog = new THREE.Fog("#d8e3e8", 40, 160);
 }

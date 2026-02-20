@@ -176,11 +176,45 @@
           max-height: 160px;
         }
       }
+
+        .credits {
+      position: fixed;
+      z-index: 1000;
+      left: 12px;
+      top: 12px;
+
+      padding: 8px 10px;
+      border-radius: 12px;
+
+      background: rgba(15, 15, 15, 0.65);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(6px);
+
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.2;
+
+      pointer-events: none; /* doesn't block clicks/drags on the canvas */
+      user-select: none;
+    }
+
+    @media (max-width: 768px) {
+      .credits {
+        left: 10px;
+        right: 10px;
+        top: 10px;
+        text-align: center;
+        font-size: 12px;
+      }
+    }
     </style>
   </head>
 
   <body>
     <div id="app"></div>
+
+    <div class="credits">Punuan: Lavdrim Mustafi &amp; Vjosa Abazi</div>
 
     <!-- Grave Info Panel (hidden by default) -->
     <div id="grave-panel" class="grave-panel" aria-hidden="true">
