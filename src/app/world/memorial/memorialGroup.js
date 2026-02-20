@@ -27,16 +27,32 @@ export async function createMemorialGroup() {
     group.add(monumentAnchor);
 
     //Pllakata
-    const plaque = createGraveCluster({
-        id: "Plaque1",
-        label: "Plaque (scan)",
-        url: "/models/plaque.glb",
-        position: [0.5, 1.92, 37],
-        rotationY: THREE.MathUtils.degToRad(220),
-        rotationX: 0,
-        scale: 1,
+    loadGLB("/models/plaque.glb")
+        .then((gltf) => {
+            const plaque = gltf.scene;
+            plaque.name = "Pllakata (scan)";
+
+            plaque.traverse((obj) => {
+                if (obj.isMesh) {
+                    obj.castShadow = true;
+                    obj.receiveShadow = true;
+                }
+            });
+        
+        plaque.position.set(0.5, 1.92, 37);
+        plaque.rotation.y = THREE.MathUtils.degToRad(220);
+        plaque.scale.set(1, 1, 1);
+
+        plaque.userData.type = "Pllakata";
+        plaque.userData.info = "Pllakata";
+
+        group.add(plaque);
+        console.log("✅ Plaque model loaded");        
+    })
+    .catch((err) => {
+        console.log("❌ Failed to load Plaque model", err);
     });
-    group.add(plaque);
+
 
     //STAIRS
     const stairs = createStairs();
@@ -339,10 +355,10 @@ export async function createMemorialGroup() {
         car_Relic.userData.info = "Car Relic";
 
         group.add(car_Relic);
-        console.log("✅ Extra model loaded");
+        console.log("✅ Car Relic model loaded");
     })
     .catch((err) => {
-        console.log("❌ Failed to load extra model", err);
+        console.log("❌ Failed to load Car Relic model", err);
     });
 
     // LIGHT POLES
@@ -403,25 +419,25 @@ export async function createMemorialGroup() {
     });
 
     //TREES
-    loadGLB("/models/trees/tree1.glb")
-    .then((gltf) => {
-        const template = gltf.scene;
+    // loadGLB("/models/trees/tree1.glb")
+    // .then((gltf) => {
+    //     const template = gltf.scene;
 
-        const treeInstances = [
-        { pos: [-15.7, 1, 25.4], rotY: 20, scale: 0.15 },
-        { pos: [-12.7, 1, 25.2], rotY: 140, scale: 0.15 },
-        { pos: [-9, 1, 25.2], rotY: 220, scale: 0.15 },
-        { pos: [-4, 1, 25.2], rotY: 330, scale: 0.15 },
-        // add many more safely now
-        ];
+    //     const treeInstances = [
+    //     { pos: [-15.7, 1, 25.4], rotY: 20, scale: 0.15 },
+    //     { pos: [-12.7, 1, 25.2], rotY: 140, scale: 0.15 },
+    //     { pos: [-9, 1, 25.2], rotY: 220, scale: 0.15 },
+    //     { pos: [-4, 1, 25.2], rotY: 330, scale: 0.15 },
+    //     // add many more safely now
+    //     ];
 
-        const treesGroup = addInstancedGLTF(template, treeInstances);
-        treesGroup.name = "TreesInstanced";
-        group.add(treesGroup);
+    //     const treesGroup = addInstancedGLTF(template, treeInstances);
+    //     treesGroup.name = "TreesInstanced";
+    //     group.add(treesGroup);
 
-        console.log("✅ Instanced trees added:", treeInstances.length);
-    })
-    .catch((err) => console.error("❌ Failed to load tree1.glb", err));
+    //     console.log("✅ Instanced trees added:", treeInstances.length);
+    // })
+    // .catch((err) => console.error("❌ Failed to load tree1.glb", err));
 
     //ANIMATED FLAGS
     loadGLB("/models/albanian_flag.glb")
